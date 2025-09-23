@@ -1,38 +1,50 @@
+
 #include "./monitor.h"
-#include <assert.h>
 #include <thread>
 #include <chrono>
 #include <iostream>
+#include <string>
 using std::cout, std::flush, std::this_thread::sleep_for, std::chrono::seconds;
 
-int vitalsOk(float temperature, float pulseRate, float spo2) {
-  if (temperature > 102 || temperature < 95) {
-    cout << "Temperature is critical!\n";
+void VitalAlert(const std::string& message) {
+    cout << message << "\n";
     for (int i = 0; i < 6; i++) {
-      cout << "\r* " << flush;
-      sleep_for(seconds(1));
-      cout << "\r *" << flush;
-      sleep_for(seconds(1));
+        cout << "\r* " << flush;
+        sleep_for(seconds(1));
+        cout << "\r *" << flush;
+        sleep_for(seconds(1));
     }
-    return 0;
-  } else if (pulseRate < 60 || pulseRate > 100) {
-    cout << "Pulse Rate is out of range!\n";
-    for (int i = 0; i < 6; i++) {
-      cout << "\r* " << flush;
-      sleep_for(seconds(1));
-      cout << "\r *" << flush;
-      sleep_for(seconds(1));
+    cout << "\n";
+}
+
+bool isTemperatureOk(float temperature) {
+    if (temperature > 102 || temperature < 95) {
+        VitalAlert("Temperature is critical!");
+        return false;
     }
-    return 0;
-  } else if (spo2 < 90) {
-    cout << "Oxygen Saturation out of range!\n";
-    for (int i = 0; i < 6; i++) {
-      cout << "\r* " << flush;
-      sleep_for(seconds(1));
-      cout << "\r *" << flush;
-      sleep_for(seconds(1));
+    return true;
+}
+
+bool isPulseRateOk(float pulseRate) {
+    if (pulseRate < 60 || pulseRate > 100) {
+        VitalAlert("Pulse Rate is critical!");
+        return false;
     }
-    return 0;
-  }
-  return 1;
+    return true;
+}
+
+bool isSpo2Ok(float spo2) {
+    if (spo2 < 90) {
+        VitalAlert("Oxygen Saturation is critical!");
+        return false;
+    }
+    return true;
+}
+
+
+bool vitalsOk(float temperature, float pulseRate, float spo2) {
+    return isTemperatureOk(temperature) &&
+           isPulseRateOk(pulseRate) &&
+           isSpo2Ok(spo2);
+
 }
