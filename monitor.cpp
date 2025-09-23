@@ -1,6 +1,5 @@
 
 #include "./monitor.h"
-#include <assert.h>
 #include <thread>
 #include <chrono>
 #include <iostream>
