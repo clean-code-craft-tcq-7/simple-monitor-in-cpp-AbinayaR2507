@@ -41,8 +41,10 @@ bool isSpo2Ok(float spo2) {
     return true;
 }
 
+
 bool vitalsOk(float temperature, float pulseRate, float spo2) {
     return isTemperatureOk(temperature) &&
            isPulseRateOk(pulseRate) &&
            isSpo2Ok(spo2);
+
 }
